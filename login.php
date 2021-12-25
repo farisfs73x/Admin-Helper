@@ -139,6 +139,14 @@ if (isset($_POST['login'])) {
 
 ?>
 
+<?php
+
+    $title = "Admin | Login"; 
+    include('meta.php');
+    $url_site = url_site();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -147,10 +155,29 @@ if (isset($_POST['login'])) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>Admin | Login</title>
+    <!-- Primary Meta Tags -->
+    <title><?php echo $title ?></title>
+    <meta name="title" content="Admin Helper">
+    <meta name="description" content="Admin Management System is for admin to keep track their important things such as sales, profit and etc. of their company.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<?php echo $url_site ?>">
+    <meta property="og:title" content="Admin Helper">
+    <meta property="og:description" content="Admin Management System is for admin to keep track their important things such as sales, profit and etc. of their company.">
+    <meta property="og:image" content="https://freesvg.org/img/1541658525.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<?php echo $url_site ?>">
+    <meta property="twitter:title" content="Admin Helper">
+    <meta property="twitter:description" content="Admin Management System is for admin to keep track their important things such as sales, profit and etc. of their company.">
+    <meta property="twitter:image" content="https://freesvg.org/img/1541658525.png">
+
+    <!-- Site Icon @ Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://freesvg.org/img/1541658525.png"/>
+
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">

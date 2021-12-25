@@ -40,7 +40,7 @@
 
 <?php
 
-    $title = "Admin | Dashboard"; 
+    $title = "Admin | Dashboard";
     include('private-top.php');
 
 ?>
