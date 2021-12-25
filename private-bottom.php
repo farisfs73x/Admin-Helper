@@ -14,7 +14,7 @@ $site_title = site_title();
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; <?php echo $site_title ?> <span id="year"></span></span>
+                        <span>Copyright &copy; <?php echo $site_title ?> <span id="year"></span> | Developed by <a href="https://github.com/farisfs73x" target="_blank">FarisFs</a></span>
                     </div>
                 </div>
             </footer>
