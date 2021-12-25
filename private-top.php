@@ -1,5 +1,5 @@
 <?php
-    $url_site = "https://github.com/farisfs73x/Admin-Helper";
+    $url_site = "farisfs73x.github.io/admin-helper/";
 ?>
 
 <!DOCTYPE html>
