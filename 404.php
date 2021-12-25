@@ -1,5 +1,8 @@
 <?php
 
+include('meta.php');
+
+$site_title = site_title();
 
 
 
@@ -62,7 +65,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
+                        <span>Copyright &copy; <?php echo $site_title ?> <span id="year"></span></span>
                     </div>
                 </div>
             </footer>
@@ -86,6 +89,10 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+
+    <script>
+        document.getElementById("year").innerHTML = new Date().getFullYear();
+    </script>
 
 </body>
 

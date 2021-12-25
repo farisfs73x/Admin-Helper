@@ -14,6 +14,12 @@
         if ($result) {
             
             unset($_SESSION['uid']);
+            unset($_SESSION['website']);
+            unset($_SESSION['github']);
+            unset($_SESSION['twitter']);
+            unset($_SESSION['instagram']);
+            unset($_SESSION['facebook']);
+            
             session_destroy();
 
             header('Location: index.php');

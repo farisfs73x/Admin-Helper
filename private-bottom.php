@@ -1,3 +1,11 @@
+<?php
+
+include('meta.php');
+
+$site_title = site_title();
+
+
+?>
 
             </div>
             <!-- End of Main Content -->
@@ -6,7 +14,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+                        <span>Copyright &copy; <?php echo $site_title ?> <span id="year"></span></span>
                     </div>
                 </div>
             </footer>
@@ -62,6 +70,10 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script>
+        document.getElementById("year").innerHTML = new Date().getFullYear();
+    </script>
 
 </body>
 

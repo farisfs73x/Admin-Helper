@@ -5,8 +5,6 @@ ob_start();
 include('config.php');
 include('func.php');
 
-// $error = 0;
-
 if (isset($_SESSION['uid']))
 {
     header('Location: index.php');
@@ -30,7 +28,14 @@ if (isset($_POST['login'])) {
         $uid_err = "Name is required!";
     }
     else {
+
+        if (strlen($uid) < 3 || strlen($uid) > 30)
+        {
+            $uid_err = "Name must between 3 to 30 characters.";
+        }
+
         $uid = test_input($uid);
+
         // check if name only contains letters and whitespace
         if (!preg_match("/^[a-zA-Z-' ]*$/", $uid))
         {
@@ -42,6 +47,13 @@ if (isset($_POST['login'])) {
     if (empty($pwd))
     {
         $pwd_err = "Password is required!";
+    }
+    else
+    {
+        if (strlen($pwd) < 8 || strlen($pwd) > 30)
+        {
+            $pwd_err = "Password must between 8 to 30 characters.";
+        }
     }
 
 
@@ -105,7 +117,6 @@ if (isset($_POST['login'])) {
                         mysqli_stmt_bind_param($auth_stmt, "ss", $auth_code, $uid);
                         // Execute the statement
                         mysqli_stmt_execute($auth_stmt);
-                        // $auth_result = mysqli_stmt_get_result($auth_stmt);
 
                         header('Location: index.php');
                         exit();
@@ -119,37 +130,10 @@ if (isset($_POST['login'])) {
             else
             {
                 $uid_err = "$uid is not exist!";
-                // $error = 1;
             }
         }
     }
 
-    
-
-    // $sql = "SELECT * FROM users WHERE username = '$uid'";
-    // $result = mysqli_query($con, $sql);
-
-    // if (mysqli_num_rows($result) == 1) {
-
-    //     $user_data = mysqli_fetch_assoc($result);
-    //     if (password_verify($pwd, $user_data['password'])) {
-
-    //         session_regenerate_id();
-    //         $auth_code = session_id();
-
-    //         $_SESSION['uid'] = $uid;
-
-    //         $auth_sql = "UPDATE users SET access_token = '$auth_code' WHERE username = '$uid'";
-    //         $res = mysqli_query($con, $auth_sql);
-
-    //         if ($res) {
-    //             header("Location: index.php");
-    //             exit();
-    //         }
-    //     }
-    // } else {
-    //     $error = 1;
-    // }
 }
 
 
@@ -203,12 +187,12 @@ if (isset($_POST['login'])) {
                                     <form class="user" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 
                                         <div class="form-group">
-                                            <input type="text" name="uid" class="form-control form-control-user" value="<?php echo $uid; ?>" placeholder="Username">
+                                            <input type="text" name="uid" class="form-control form-control-user" minlength="3" maxlength="30" value="<?php echo $uid; ?>" placeholder="Username">
                                             <p class="reg-err"><?php if ($uid_err != "") {echo $uid_err;} ?></p>
                                         </div>
 
                                         <div class="form-group">
-                                            <input type="password" name="pwd" class="form-control form-control-user" placeholder="Password">
+                                            <input type="password" name="pwd" class="form-control form-control-user" minlength="8" maxlength="30" placeholder="Password">
                                             <p class="reg-err"><?php if ($pwd_err != "") {echo $pwd_err;} ?></p>
                                         </div>
 
@@ -221,14 +205,6 @@ if (isset($_POST['login'])) {
 
                                         <input type="submit" name="login" value="Login" class="btn btn-primary btn-user btn-block">
 
-                                        <!-- <hr>
-
-                                        <a href="index.html" class="btn btn-google btn-user btn-block">
-                                            <i class="fab fa-google fa-fw"></i> Login with Google
-                                        </a>
-                                        <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                            <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                                        </a> -->
                                     </form>
                                     <hr>
                                     <div class="text-center">

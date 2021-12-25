@@ -30,7 +30,14 @@ if (isset($_POST['signup'])) {
         $uid_err = "Name is required!";
     }
     else {
+
+        if (strlen($uid) < 3 || strlen($uid) > 30)
+        {
+            $uid_err = "Name must between 3 to 30 characters.";
+        }
+        
         $uid = test_input($uid);
+
         // check if name only contains letters and whitespace
         if (!preg_match("/^[a-zA-Z-' ]*$/", $uid))
         {
@@ -44,7 +51,14 @@ if (isset($_POST['signup'])) {
         $email_err = "Email is required!";
     }
     else {
+
+        if (strlen($email) < 6 || strlen($email) > 50)
+        {
+            $uid_err = "Email must between 6 to 50 characters.";
+        }
+
         $email = test_input($email);
+
         // check if e-mail address is well-formed
         if (!filter_var($email, FILTER_VALIDATE_EMAIL))
         {
@@ -57,6 +71,15 @@ if (isset($_POST['signup'])) {
     {
         $pwd_err = "Password is required!";
     }
+    else
+    {
+        if (strlen($pwd) < 8 || strlen($pwd) > 30)
+        {
+            $pwd_err = "Password must between 8 to 30 characters.";
+        }
+    }
+    
+   
 
     //Confirm password check
     if (empty($c_pwd))
@@ -64,6 +87,12 @@ if (isset($_POST['signup'])) {
         $c_pwd_err = "Confirm password is required!";
     }
     else {
+
+        if (strlen($c_pwd) < 8 || strlen($c_pwd) > 30)
+        {
+            $c_pwd_err = "Confirm Password must between 8 to 30 characters.";
+        }
+
         //check password = confirm password
         if ($pwd != $c_pwd) {
             $c_pwd_err = "Confirm password is not match!";
@@ -119,9 +148,10 @@ if (isset($_POST['signup'])) {
 
                 // Hash the password before insert into database
                 $pwd = password_hash($pwd, PASSWORD_DEFAULT);
+                $register_date = date("d/m/Y");
 
                 // Create a template
-                $sql = "INSERT INTO users (username, email, password, access_token) VALUE (?, ?, ?, ?);";   // Table users
+                $sql = "INSERT INTO users (username, email, password, register_date, access_token) VALUE (?, ?, ?, ?, ?);";   // Table users
                 $socmed_sql = "INSERT INTO socmeds (username) VALUE (?);";  // Table socmeds
                 // Create a prepared statement
                 $stmt = mysqli_stmt_init($con); // users table
@@ -136,7 +166,7 @@ if (isset($_POST['signup'])) {
                 {
                     // Bind paremeters to the placeholder
                     // users table
-                    mysqli_stmt_bind_param($stmt, "ssss", $uid, $email, $pwd, $a_token);
+                    mysqli_stmt_bind_param($stmt, "sssss", $uid, $email, $pwd, $register_date, $a_token);
                     mysqli_stmt_execute($stmt);
                     // socmeds table
                     mysqli_stmt_bind_param($socmed_stmt, "s", $uid);
@@ -150,14 +180,6 @@ if (isset($_POST['signup'])) {
         } 
 
     }
-    
-    
-    
-    // $sql = "INSERT INTO users (username, password, access_token) VALUE ('$uid','$pwd','')";
-    // mysqli_query($con, $sql);
-
-    // header('Location: login.php');
-    // exit();
 }
 
 ?>
@@ -185,6 +207,7 @@ if (isset($_POST['signup'])) {
     <style>
         .reg-err {color: red; font-size: 15px; margin-left: 5px;}
     </style>
+    
 </head>
 
 <body class="bg-gradient-primary">
@@ -204,34 +227,26 @@ if (isset($_POST['signup'])) {
                             <form class="user" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 
                                 <div class="form-group">
-                                    <input type="text" name="uid" class="form-control form-control-user" value="<?php echo $uid; ?>" placeholder="Username">
+                                    <input type="text" name="uid" class="form-control form-control-user" minlength="3" maxlength="30" value="<?php echo $uid; ?>" placeholder="Username">
                                     <p class="reg-err"><?php if ($uid_err != "") {echo $uid_err;} ?></p>
                                 </div>
 
                                 <div class="form-group">
-                                    <input type="email" name="email" class="form-control form-control-user" value="<?php echo $email; ?>" placeholder="Email">
+                                    <input type="email" name="email" class="form-control form-control-user" minlength="6" maxlength="50" value="<?php echo $email; ?>" placeholder="Email">
                                     <p class="reg-err"><?php if ($email_err != "") {echo $email_err;} ?></p>
                                 </div>
 
                                 <div class="form-group">
-                                    <input type="password" name="pwd" class="form-control form-control-user" placeholder="Password">
+                                    <input type="password" name="pwd" class="form-control form-control-user" minlength="8" maxlength="30" placeholder="Password">
                                     <p class="reg-err"><?php if ($pwd_err != "") {echo $pwd_err;} ?></p>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" name="c-pwd" class="form-control form-control-user" placeholder="Confirm Password">
+                                    <input type="password" name="c-pwd" class="form-control form-control-user" minlength="8" maxlength="30" placeholder="Confirm Password">
                                     <p class="reg-err"><?php if ($c_pwd_err != "") {echo $c_pwd_err;} ?></p>
                                 </div>
 
                                 <input type="submit" name="signup" value="Register" class="btn btn-primary btn-user btn-block">
-
-                                <!-- <hr>
-
-                                <a href="index.html" class="btn btn-google btn-user btn-block">
-                                    <i class="fab fa-google fa-fw"></i> Register with Google
-                                </a>
-                                <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                    <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
-                                </a> -->
+                                
                             </form>
                             <hr>
                             <div class="text-center">
