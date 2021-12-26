@@ -116,9 +116,15 @@ else
 ?>
 
                 <!-- Begin Page Content -->
-                <div class="container">
-                    <div class="main-body">
 
+                <div class="container">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Profile</h1>
+                    </div>
+
+                    <div class="main-body">
                         <div class="row gutters-sm">
                             <div class="col-md-4 mb-3">
                                 <div class="card">
