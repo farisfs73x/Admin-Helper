@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 4.9.5
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 25, 2021 at 04:00 PM
--- Server version: 10.4.16-MariaDB
--- PHP Version: 7.4.12
+-- Host: localhost:3306
+-- Generation Time: Dec 26, 2021 at 03:40 AM
+-- Server version: 10.5.12-MariaDB
+-- PHP Version: 7.3.32
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `auths`
+-- Database: `id16865447_auths_dbname`
 --
 
 -- --------------------------------------------------------
@@ -28,13 +29,13 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `socmeds` (
-  `username` varchar(255) NOT NULL,
-  `website` varchar(255) NOT NULL,
-  `github` varchar(255) NOT NULL,
-  `twitter` varchar(255) NOT NULL,
-  `instagram` varchar(255) NOT NULL,
-  `facebook` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `website` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `github` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `twitter` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `instagram` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `facebook` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -44,15 +45,15 @@ CREATE TABLE `socmeds` (
 
 CREATE TABLE `users` (
   `uid` int(11) NOT NULL,
-  `username` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `register_date` varchar(255) NOT NULL,
+  `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `register_date` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `phone` bigint(20) DEFAULT NULL,
-  `address` varchar(255) NOT NULL,
-  `position` varchar(255) NOT NULL,
-  `access_token` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `address` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `position` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `access_token` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Indexes for dumped tables
@@ -78,7 +79,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -12,7 +12,7 @@ if (isset($_SESSION['uid']))
 }
 
 // Variable declaration
-$uid = $email = $pwd = $c_pwd = $a_token = "";
+$uid = $email = $pwd = $c_pwd = "";
 $uid_err = $email_err = $pwd_err = $c_pwd_err = "";
 
 // Form method POST check
@@ -151,7 +151,7 @@ if (isset($_POST['signup'])) {
                 $register_date = date("d/m/Y");
 
                 // Create a template
-                $sql = "INSERT INTO users (username, email, password, register_date, access_token) VALUE (?, ?, ?, ?, ?);";   // Table users
+                $sql = "INSERT INTO users (username, email, password, register_date) VALUE (?, ?, ?, ?);";   // Table users
                 $socmed_sql = "INSERT INTO socmeds (username) VALUE (?);";  // Table socmeds
                 // Create a prepared statement
                 $stmt = mysqli_stmt_init($con); // users table
@@ -166,7 +166,7 @@ if (isset($_POST['signup'])) {
                 {
                     // Bind paremeters to the placeholder
                     // users table
-                    mysqli_stmt_bind_param($stmt, "sssss", $uid, $email, $pwd, $register_date, $a_token);
+                    mysqli_stmt_bind_param($stmt, "ssss", $uid, $email, $pwd, $register_date);
                     mysqli_stmt_execute($stmt);
                     // socmeds table
                     mysqli_stmt_bind_param($socmed_stmt, "s", $uid);

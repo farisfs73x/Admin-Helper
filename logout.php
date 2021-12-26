@@ -26,6 +26,11 @@
             exit();
 
         }
+        else
+        {
+            header('Location: login.php');
+            exit();
+        }
 
     }
     else 

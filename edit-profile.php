@@ -31,6 +31,9 @@ if (isset($_SESSION['uid'])) {
     if (!mysqli_stmt_prepare($verify_auth_stmt, $verify_auth_sql))
     {
         echo "Verify Auths SQL statement failed.";
+        
+        header('Location: login.php');
+        exit();
     }
     else
     {
