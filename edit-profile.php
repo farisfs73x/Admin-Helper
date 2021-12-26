@@ -283,7 +283,7 @@ else
 ?>
 
                 <!-- Begin Page Content -->
-                <div class="container"><?php echo date("Y/m/d") ?>
+                <div class="container">
                     <div class="main-body">
                         <div class="row">
                             <div class="col-lg-4">
