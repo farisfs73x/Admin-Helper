@@ -5,10 +5,53 @@ ob_start();
 include('config.php');
 include('func.php');
 
-if (isset($_SESSION['uid']))
+date_default_timezone_set("Asia/Kuala_Lumpur");
+
+if (isset($_SESSION['uid']) && isset($_SESSION['verify_session']))
 {
-    header('Location: index.php');
-    exit();
+
+    // Assign current session
+    $verify_sess_id = $_SESSION['verify_session'];
+    $verify_sess_uid = $_SESSION['uid'];
+
+    // Create a template
+    $verify_sess_sql = "SELECT access_token FROM users WHERE username = ?;";
+    // Create a prepared statement
+    $verify_sess_stmt = mysqli_stmt_init($con);
+
+    // Prepare the prepared statement
+    if (!mysqli_stmt_prepare($verify_sess_stmt, $verify_sess_sql))
+    {
+        echo "Verify Auths SQL statement failed.";
+
+        header('Location: index.php');
+        exit();
+
+    }
+    else
+    {
+
+        mysqli_stmt_bind_param($verify_sess_stmt, "s", $verify_sess_uid);
+        mysqli_stmt_execute($verify_sess_stmt);
+        
+        // Get the result from database
+        $verify_sess_result = mysqli_stmt_get_result($verify_sess_stmt);
+
+        // If have result from database
+        if (mysqli_num_rows($verify_sess_result) == 1)
+        {
+            $verify_sess_row = mysqli_fetch_assoc($verify_sess_result);
+            
+            // Compare session from database
+            if ($verify_sess_id == $verify_sess_row['access_token'])
+            {
+                
+                header('Location: index.php');
+                exit();
+            }
+        }
+    }
+    
 }
 
 // Variable declaration
@@ -153,24 +196,33 @@ if (isset($_POST['signup'])) {
                 // Create a template
                 $sql = "INSERT INTO users (username, email, password, register_date) VALUE (?, ?, ?, ?);";   // Table users
                 $socmed_sql = "INSERT INTO socmeds (username) VALUE (?);";  // Table socmeds
+                $monthly_sales_sql = "INSERT INTO monthly_sales (username) VALUE (?);"; // Table montly_sales
+
                 // Create a prepared statement
                 $stmt = mysqli_stmt_init($con); // users table
                 $socmed_stmt = mysqli_stmt_init($con);  // socmeds table
+                $monthly_sales_stmt = mysqli_stmt_init($con);   // monthly_sales table
 
                 // Prepare the prepared statement
-                if (!mysqli_stmt_prepare($stmt, $sql) || !mysqli_stmt_prepare($socmed_stmt, $socmed_sql))
+                if (!mysqli_stmt_prepare($stmt, $sql) || !mysqli_stmt_prepare($socmed_stmt, $socmed_sql) || !mysqli_stmt_prepare($monthly_sales_stmt, $monthly_sales_sql))
                 {
                     echo "SQL statement failed.";
                 }
                 else
                 {
                     // Bind paremeters to the placeholder
+
                     // users table
                     mysqli_stmt_bind_param($stmt, "ssss", $uid, $email, $pwd, $register_date);
                     mysqli_stmt_execute($stmt);
+
                     // socmeds table
                     mysqli_stmt_bind_param($socmed_stmt, "s", $uid);
                     mysqli_stmt_execute($socmed_stmt);
+
+                    // monthly_sales table
+                    mysqli_stmt_bind_param($monthly_sales_stmt, "s", $uid);
+                    mysqli_stmt_execute($monthly_sales_stmt);
 
                     header('Location: login.php');
                     exit();
@@ -277,7 +329,7 @@ if (isset($_POST['signup'])) {
                             </form>
                             <hr>
                             <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                <a class="small" href="forgot-password.php">Forgot Password?</a>
                             </div>
                             <div class="text-center">
                                 <a class="small" href="login.php">Already have an account? Login!</a>

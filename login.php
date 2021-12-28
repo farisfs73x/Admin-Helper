@@ -5,10 +5,51 @@ ob_start();
 include('config.php');
 include('func.php');
 
-if (isset($_SESSION['uid']))
+if (isset($_SESSION['uid']) && isset($_SESSION['verify_session']))
 {
-    header('Location: index.php');
-    exit();
+
+    // Assign current session
+    $verify_sess_id = $_SESSION['verify_session'];
+    $verify_sess_uid = $_SESSION['uid'];
+
+    // Create a template
+    $verify_sess_sql = "SELECT access_token FROM users WHERE username = ?;";
+    // Create a prepared statement
+    $verify_sess_stmt = mysqli_stmt_init($con);
+
+    // Prepare the prepared statement
+    if (!mysqli_stmt_prepare($verify_sess_stmt, $verify_sess_sql))
+    {
+        echo "Verify Auths SQL statement failed.";
+
+        header('Location: index.php');
+        exit();
+
+    }
+    else
+    {
+
+        mysqli_stmt_bind_param($verify_sess_stmt, "s", $verify_sess_uid);
+        mysqli_stmt_execute($verify_sess_stmt);
+        
+        // Get the result from database
+        $verify_sess_result = mysqli_stmt_get_result($verify_sess_stmt);
+
+        // If have result from database
+        if (mysqli_num_rows($verify_sess_result) == 1)
+        {
+            $verify_sess_row = mysqli_fetch_assoc($verify_sess_result);
+            
+            // Compare session from database
+            if ($verify_sess_id == $verify_sess_row['access_token'])
+            {
+                
+                header('Location: index.php');
+                exit();
+            }
+        }
+    }
+    
 }
 
 // Variable declaration
@@ -96,6 +137,9 @@ if (isset($_POST['login'])) {
                     // If verified, regenerate the session id and store it in the variable
                     session_regenerate_id();
                     $auth_code = session_id();
+
+                    // For verifying purpose
+                    $_SESSION['verify_session'] = $auth_code;
 
                     // Store session uid for authorization used
                     $_SESSION['uid'] = $uid;
@@ -235,7 +279,7 @@ if (isset($_POST['login'])) {
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                        <a class="small" href="forgot-password.php">Forgot Password?</a>
                                     </div>
                                     <div class="text-center">
                                         <a class="small" href="register.php">Create an Account!</a>

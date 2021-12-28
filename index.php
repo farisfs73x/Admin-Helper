@@ -3,7 +3,13 @@
     session_start();
     ob_start();
     include('config.php');
+    include('func.php');
 
+    date_default_timezone_set("Asia/Kuala_Lumpur");
+
+    $month_update = $amount_update = 0;
+    $month_update_err = $amount_update_err = "";
+    
     if (isset($_SESSION['uid'])) {
         
         $uid = $_SESSION['uid'];
@@ -21,6 +27,106 @@
                 header('Location: login.php');
                 exit();
                 
+            }
+            else
+            {
+
+                if (isset($_POST['add']) || isset($_POST['edit']))
+                {
+                    if (!empty($_POST['month-data-update']) && !empty($_POST['amount-data-update']))
+                    {
+                        $month_update = mysqli_real_escape_string($con, $_POST['month-data-update']);
+                        $amount_update = mysqli_real_escape_string($con, $_POST['amount-data-update']);
+
+                        $month_update = test_input($month_update);
+                        $amount_update = test_input($amount_update);
+
+                        if ($month_update > 12 || $month_update < 1)
+                        {
+                            $month_update_err = "Month need to be between 1 to 12 only.";
+                        }
+                        else if (is_numeric($month_update) != 1)
+                        {
+                            $month_update_err = "Please enter number only!";
+                        }
+
+                        if ($amount_update > 5000000 || $amount_update < 1)
+                        {
+                            $amount_update_err = "Amount need to be between RM 1 to RM 5,000,000 only.";
+                        }
+                        else if (is_numeric($amount_update) != 1)
+                        {
+                            $amount_update_err = "Please enter number only!";
+                        }
+
+                        $all_update_err = $amount_update_err.$month_update_err;
+
+
+                        if ($all_update_err == "")
+                        {
+
+                            $month_check = array("january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december");
+                            $month = $month_check[$month_update - 1];
+
+
+                            // Create a template
+                            $data_update_sql = "UPDATE monthly_sales SET $month = ? WHERE username = ?;";
+                            // Create a prepared statement
+                            $data_update_stmt = mysqli_stmt_init($con);
+
+                            // Prepare the prepared statement
+                            if (!mysqli_stmt_prepare($data_update_stmt, $data_update_sql))
+                            {
+                                echo "SQL statement 1 failed.";
+
+                            }
+                            else
+                            {
+                                // Bind paremeters to the placeholder
+                                mysqli_stmt_bind_param($data_update_stmt, "ss", $amount_update, $uid);
+                                mysqli_stmt_execute($data_update_stmt);
+
+
+                            }
+                        }
+
+
+                    }
+
+                }
+
+                
+
+                $monthly_data_sql = "SELECT * FROM monthly_sales WHERE username = '$uid'";
+                $monthly_data_res = mysqli_query($con, $monthly_data_sql);
+
+                if (mysqli_num_rows($monthly_data_res) == 1)
+                {
+                    $monthly_data_row = mysqli_fetch_assoc($monthly_data_res);
+
+                    $jan = $monthly_data_row['january'];
+                    $feb = $monthly_data_row['february'];
+                    $mar = $monthly_data_row['march'];
+                    $apr = $monthly_data_row['april'];
+                    $may = $monthly_data_row['may'];
+                    $jun = $monthly_data_row['june'];
+                    $jul = $monthly_data_row['july'];
+                    $aug = $monthly_data_row['august'];
+                    $sep = $monthly_data_row['september'];
+                    $oct = $monthly_data_row['october'];
+                    $nov = $monthly_data_row['november'];
+                    $dec = $monthly_data_row['december'];
+
+                    $annual_sales = $jan + $feb + $mar + $apr + $may + $jun + $jul + $aug + $sep + $oct + $nov + $dec;
+                    
+                    $current_month = date('F');
+                    $current_month = strtolower($current_month);
+                    $monthly_sales = $monthly_data_row[$current_month];
+
+                }
+
+
+
             }
 
         }
@@ -67,7 +173,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Earnings (Monthly)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">RM40,000</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $monthly_sales ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -85,7 +191,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Earnings (Annual)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">RM215,000</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $annual_sales ?></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -148,7 +254,7 @@
                     <div class="row">
 
                         <!-- Area Chart -->
-                        <div class="col-xl-8 col-lg-7">
+                        <div class="area-chart-fs col-xl-8 col-lg-7">
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div
@@ -159,13 +265,84 @@
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
+
+                                        <!-- Add Modal -->
+                                        <div class="modal fade" id="elegantModalAddForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <!--Content-->
+                                                <div class="modal-content form-elegant">
+                                                    <!--Header-->
+                                                    <div class="modal-header text-center">
+                                                        <h3 class="modal-title w-100 dark-grey-text font-weight-bold my-3" id="myModalLabel"><strong>Add Data</strong></h3>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <!--Body-->
+                                                    <form class="modal-body mx-4" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                                                        <!--Body-->
+                                                        <div class="md-form mb-1 mt-0">
+                                                            <input type="number" name="month-data-update" id="Form-email1" class="form-control validate" placeholder="Month (1 - 12)">
+                                                        </div>
+
+                                                        <div class="md-form pb-3">
+                                                            <input type="number" name="amount-data-update" id="Form-pass1" class="form-control validate" placeholder="Amount (RM)">
+                                                        </div>
+
+                                                        <div class="text-center mb-3">
+                                                            <input type="submit" class="btn blue-gradient btn-block btn-rounded z-depth-1a" name="add" value="Add"></input>
+                                                        </div>
+                                                        
+                                                    </form>
+
+                                                </div>
+                                                <!--/.Content-->
+                                            </div>
+                                        </div>
+                                        <!-- Modal -->
+
+                                        <!-- Edit Modal -->
+                                        <div class="modal fade" id="elegantModalEditForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <!--Content-->
+                                                <div class="modal-content form-elegant">
+                                                    <!--Header-->
+                                                    <div class="modal-header text-center">
+                                                        <h3 class="modal-title w-100 dark-grey-text font-weight-bold my-3" id="myModalLabel"><strong>Edit Data</strong></h3>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <!--Body-->
+                                                    <form class="modal-body mx-4" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                                                        <!--Body-->
+                                                        <div class="md-form mb-1 mt-0">
+                                                            <input type="number" name="month-data-update" id="Form-email1" class="form-control validate" placeholder="Month (1 - 12)">
+                                                        </div>
+
+                                                        <div class="md-form pb-3">
+                                                            <input type="number" name="amount-data-update" id="Form-pass1" class="form-control validate" placeholder="Amount (RM)">
+                                                        </div>
+
+                                                        <div class="text-center mb-3">
+                                                            <input type="submit" class="btn blue-gradient btn-block btn-rounded z-depth-1a" name="edit" value="Edit"></input>
+                                                        </div>
+                                                        
+                                                    </form>
+
+                                                </div>
+                                                <!--/.Content-->
+                                            </div>
+                                        </div>
+                                        <!-- Modal -->
+                                        
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="" data-toggle="modal" data-target="#elegantModalAddForm">Add data</a>
+                                            <a class="dropdown-item" href="" data-toggle="modal" data-target="#elegantModalEditForm">Edit data</a>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            <a class="dropdown-item" href="">Something else here</a>
                                         </div>
                                     </div>
                                 </div>

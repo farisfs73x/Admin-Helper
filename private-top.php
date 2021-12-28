@@ -40,6 +40,9 @@
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
+    <!-- Custom styles from fs -->
+    <link rel="stylesheet" href="css/custom-css-fs.css">
+
     <style>
         .reg-err {color: red; font-size: 15px; margin-left: 5px;}
         .fixed-uid {color: orange; padding: 0; margin: 0; font-size: 15px;}
