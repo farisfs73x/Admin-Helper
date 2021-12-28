@@ -11,7 +11,7 @@
 - Profile template (Bootstraps): <a href="https://www.bootdey.com/snippets/view/profile-with-data-and-skills">Profile with Data and Skills</a>
 - Edit Profile template (Bootstraps): <a href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills">Profile Edit Data and Skills</a>
 - PHP version: 7.4
-- Database: 2 Tables - 'users' & 'socmeds'
+- Database: 3 Tables - 'users', 'socmeds', 'monthly_sales'.
 
 
 ### <img src="https://raw.githubusercontent.com/farisfs73x/farisfs73x/main/assets/tool.gif" width="30px" height="35px"> Technologies & Tools
