@@ -361,7 +361,7 @@ else
                                                 <h6 class="mb-0">Email</h6>
                                             </div>
                                             <div class="col-sm-9 text-secondary">
-                                                <input name="email" type="email" class="form-control" minlength="6" maxlength="50" value="<?php echo $email ?>" placeholder="muhammad@gmail.com">
+                                                <input name="email" type="email" class="form-control" minlength="6" maxlength="50" value="<?php echo $email ?>" placeholder="muhammad@gmail.com" required>
                                                 <p class="reg-err"><?php if ($email_err != "") {echo $email_err;} ?></p>
                                             </div>
                                         </div>

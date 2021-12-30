@@ -45,7 +45,7 @@
                         {
                             $month_update_err = "Month need to be between 1 to 12 only.";
                         }
-                        else if (is_numeric($month_update) != 1)
+                        if (is_numeric($month_update) != 1)
                         {
                             $month_update_err = "Please enter number only!";
                         }
@@ -54,7 +54,7 @@
                         {
                             $amount_update_err = "Amount need to be between RM 1 to RM 5,000,000 only.";
                         }
-                        else if (is_numeric($amount_update) != 1)
+                        if (is_numeric($amount_update) != 1)
                         {
                             $amount_update_err = "Please enter number only!";
                         }
@@ -282,11 +282,13 @@
                                                     <form class="modal-body mx-4" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                                                         <!--Body-->
                                                         <div class="md-form mb-1 mt-0">
-                                                            <input type="number" name="month-data-update" id="Form-email1" class="form-control validate" placeholder="Month (1 - 12)">
+                                                            <input type="number" name="month-data-update" id="Form-email1" class="form-control validate" min="1" max="12" placeholder="Month (1 - 12)" required>
+                                                            <?php if ($month_update_err != "") { echo "<script>alert('" . $month_update_err . "')</script>"; } ?>
                                                         </div>
 
                                                         <div class="md-form pb-3">
-                                                            <input type="number" name="amount-data-update" id="Form-pass1" class="form-control validate" placeholder="Amount (RM)">
+                                                            <input type="number" name="amount-data-update" id="Form-pass1" class="form-control validate" min="1" max="5000000" placeholder="Amount (RM)" required>
+                                                            <?php if ($amount_update_err != "") { echo "<script>alert('" . $amount_update_err . "')</script>"; } ?>
                                                         </div>
 
                                                         <div class="text-center mb-3">

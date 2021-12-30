@@ -14,6 +14,7 @@
         if ($result) {
             
             unset($_SESSION['uid']);
+            unset($_SESSION['verify_session']);
             unset($_SESSION['website']);
             unset($_SESSION['github']);
             unset($_SESSION['twitter']);

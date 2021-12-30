@@ -258,12 +258,12 @@ if (isset($_POST['login'])) {
                                     <form class="user" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 
                                         <div class="form-group">
-                                            <input type="text" name="uid" class="form-control form-control-user" minlength="3" maxlength="30" value="<?php echo $uid; ?>" placeholder="Username">
+                                            <input type="text" name="uid" class="form-control form-control-user" minlength="3" maxlength="30" value="<?php echo $uid; ?>" placeholder="Username" required>
                                             <p class="reg-err"><?php if ($uid_err != "") {echo $uid_err;} ?></p>
                                         </div>
 
                                         <div class="form-group">
-                                            <input type="password" name="pwd" class="form-control form-control-user" minlength="8" maxlength="30" placeholder="Password">
+                                            <input type="password" name="pwd" class="form-control form-control-user" minlength="8" maxlength="30" placeholder="Password" required>
                                             <p class="reg-err"><?php if ($pwd_err != "") {echo $pwd_err;} ?></p>
                                         </div>
 
